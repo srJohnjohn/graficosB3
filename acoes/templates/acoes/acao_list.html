@@ -1,0 +1,9 @@
+<h2>grafico das ações</h2>
+
+<ul>
+{% for acao in object_list %}
+    <li>{{ acao.nome }} - {{ acao.close }}</li>
+{% empty %}
+    <li>No acoes</li>
+{% endfor %}
+</ul>
