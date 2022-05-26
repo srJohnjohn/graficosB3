@@ -1,9 +1,52 @@
-<h2>grafico das ações</h2>
+<h2>BVSP</h2>
 
-<ul>
-{% for acao in object_list %}
+<!-- <ul>
+    {% for acao in object_list %} <li>{{ acao.close }} ,</li> <li>{{ acao.dia}}</li> {% endfor %}
+</ul> -->
+<!-- {% for acao in object_list %}
     <li>{{ acao.nome }} - {{ acao.close }}</li>
 {% empty %}
     <li>No acoes</li>
-{% endfor %}
-</ul>
+{% endfor %} -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<canvas id="myChart" width="400" height="400"></canvas>
+<script>
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [ {% for acao in object_list %} '{{ acao.dia }}', {% endfor %} ],
+            datasets: [{
+                label: 'Preco de fechamento',
+                data: [ {% for acao in object_list %} {{ acao.close }}, {% endfor %} ],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+            // scales: {
+                //     y: {
+                    //         beginAtZero: true
+                    //     }
+                    // }
+                }
+            });
+
+</script>
+

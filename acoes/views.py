@@ -75,6 +75,6 @@ class IndexView(ListView):
     #         q.save()
             
     def get_queryset(self):
-        self.object_list = Acao.objects.filter(codigo='BVSP') #refatorar
+        self.object_list = Acao.objects.filter(codigo='BVSP')
         return self.object_list
         
