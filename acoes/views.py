@@ -1,3 +1,4 @@
+from multiprocessing import get_context
 from tracemalloc import start
 from django.shortcuts import render
 from django.views.generic import DetailView, ListView
@@ -14,8 +15,20 @@ class AcoesView(ListView):
     template_name = 'Acoes/grafico.html'
     #paginate_by = 25
 
+    def get_context_data(self, **kwargs):
+        lista_acoes = []
+        tabale_empresas = pd.read_csv("Empresas.csv")
+        for empresa in tabale_empresas.itertuples():
+            lista_acoes.append(empresa.Codigo)
+        context = super().get_context_data(**kwargs)
+        context['acoes'] = lista_acoes
+        self.object_list = Acao.objects.filter(codigo=self.kwargs['codigo']) #refatorar
+        context['nome'] =  self.object_list.first().nome
+        return context
+
     def get_queryset(self):
-        self.object_list = Acao.objects.filter(nome='NomeAcao') #refatorar
+        self.object_list = Acao.objects.filter(codigo=self.kwargs['codigo']) #refatorar
+        
         return self.object_list
     
     
@@ -28,6 +41,18 @@ class AcoesView(ListView):
 class IndexView(ListView):
     model = Acao
     template_name = 'Acoes/grafico.html'
+
+    def get_context_data(self, **kwargs):
+        lista_acoes = []
+        tabale_empresas = pd.read_csv("Empresas.csv")
+        for empresa in tabale_empresas.itertuples():
+            lista_acoes.append(empresa.Codigo)
+        context = super().get_context_data(**kwargs)
+        print(lista_acoes)
+        context['acoes'] = lista_acoes
+        context['nome'] =  "Ibovespa"
+        return context
+    
 
     # cotacao_ibovespa = dados.DataReader('^BVSP', data_source='yahoo', start='01/01/2020', end='01/01/2021') #[High, Low, Open, Close, Volume, Adj Close, date]
     
@@ -53,8 +78,8 @@ class IndexView(ListView):
 
     #     ibov.save()
     # # tabela empresas 
-    # tabale_empresas = pd.read_csv("Empresas.csv")
     # print("começando a ler dados das empresas")
+    # tabale_empresas = pd.read_csv("Empresas.csv")
     # for empresa in tabale_empresas.itertuples():
     #     print(empresa.Codigo)
     #     cotacao = dados.DataReader(empresa.Codigo + '.SA', data_source='yahoo', start='01/01/2020', end='01/01/2021')

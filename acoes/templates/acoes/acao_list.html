@@ -1,40 +1,78 @@
-<h2>BVSP</h2>
+<h2>{{ nome}}</h2>
 
-<!-- <ul>
-    {% for acao in object_list %} <li>{{ acao.close }} ,</li> <li>{{ acao.dia}}</li> {% endfor %}
-</ul> -->
-<!-- {% for acao in object_list %}
-    <li>{{ acao.nome }} - {{ acao.close }}</li>
-{% empty %}
-    <li>No acoes</li>
-{% endfor %} -->
+<style>
+
+    #button {
+        /* Box in the button */
+        display: block;
+        width: 190px;
+    }
+    
+    #button a {
+        text-decoration: none;
+        /* Remove the underline from the links. */
+    }
+    
+    #button ul {
+        list-style-type: none;
+        /* Remove the bullets from the list */
+    }
+    
+    #button .top {
+        background-color: #DDD;
+        /* The button background */
+    }
+    
+    #button ul li.item {
+        display: none;
+        /* By default, do not display the items (which contains the links) */
+    }
+    
+    #button ul:hover .item {
+        /* When the user hovers over the button (or any of the links) */
+        display: block;
+        border: 1px solid black;
+        background-color: #EDC;
+    }
+</style>
+  <body>
+    <div id="button">
+      <ul>
+        <li class="top">lista de ações</li>
+        {% for acao in acoes %}
+            <li class="item"><a href="{% url 'grafico-acoes' acao %}">{{ acao }}</a></li>
+        {% endfor %}
+        <!-- <li class="item"><a href="http://serverfault.com/">Visit serverfault</a></li> -->
+        
+      </ul>
+    </div>
+  </body>
+<a href="{% url 'grafico-acoes' 'PETR3' %}">PETR3</a>
+<a href="{% url 'grafico-acoes' 'MGLU3' %}">MGLU3</a>
+<a href="{% url 'grafico-acoes' 'AZUL4' %}">AZUL4</a>
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <canvas id="myChart" width="400" height="400"></canvas>
 <script>
     var ctx = document.getElementById('myChart').getContext('2d');
+    const gradient = ctx.createLinearGradient(0,0,0, 400)
+    
+    gradient.addColorStop(0, '#5cffca')
+    // gradient.addColorStop(0, '#FF0000')
+    // gradient.addColorStop(1, '#66FF')
+    
     var myChart = new Chart(ctx, {
+        
+
         type: 'line',
         data: {
             labels: [ {% for acao in object_list %} '{{ acao.dia }}', {% endfor %} ],
             datasets: [{
                 label: 'Preco de fechamento',
                 data: [ {% for acao in object_list %} {{ acao.close }}, {% endfor %} ],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
+                fill:true,
+                backgroundColor:gradient,
                 borderWidth: 1
             }]
         },
