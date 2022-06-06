@@ -1,15 +1,15 @@
+{% extends 'base.html' %}
 {% load static %}
+ 
+{% block 'titulo' %}{{ nome}}{% endblock%}
 
-<link rel="stylesheet" type="text/css" href="{% static 'acoes/bootstrap.min.css' %}">
 
-<body>
-
-    <nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
-        <div class="container-fluid">
-        
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a href="/" class="nav-link active">Home</a>
+{% block 'body' %}
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
+    <div class="container-fluid">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="/" class="nav-link active">Home</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Lista de Ações</a>
@@ -18,48 +18,51 @@
                         <li><a class="dropdown-item" href="{% url 'grafico-acoes' acao %}">{{ acao }}</a></li>
                         {% endfor %}
                     </ul>
-                  </li>
-            </ul>
-        </div>
-    </nav>
+                </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
     <br/>
     <h2>{{ nome}}</h2>
     <br/>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<canvas id="myChart" width="400" height="400"></canvas>
-<script>
-    var ctx = document.getElementById('myChart').getContext('2d');
-    const gradient = ctx.createLinearGradient(0,0,0, 400)
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+{% endblock %}
     
-    gradient.addColorStop(0, '#5cffca')
-    // gradient.addColorStop(0, '#FF0000')  #vermelho
-    // gradient.addColorStop(1, '#66FF')    #roxo
-    
-    var myChart = new Chart(ctx, {
+{% block 'script'%}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('myChart').getContext('2d');
+        const gradient = ctx.createLinearGradient(0,0,0, 400)
         
+        gradient.addColorStop(0, '#5cffca')
+        // gradient.addColorStop(0, '#FF0000')  #vermelho
+        // gradient.addColorStop(1, '#66FF')    #roxo
         
-        type: 'line',
-        data: {
-            labels: [ {% for acao in object_list %} '{{ acao.dia }}', {% endfor %} ],
-            datasets: [{
-                label: 'Preco de fechamento',
-                data: [ {% for acao in object_list %} {{ acao.close }}, {% endfor %} ],
-                fill:true,
-                backgroundColor:gradient,
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true
-            // scales: {
-                //     y: {
-                    //         beginAtZero: true
-                    //     }
-                    // }
-                }
-            });
+        var myChart = new Chart(ctx, {
             
-        </script>
-        <script type="text/javascript" src="{% static 'acoes/bootstrap.bundle.min.js' %}"></script>
-</body>
-
+            
+            type: 'line',
+            data: {
+                labels: [ {% for acao in object_list %} '{{ acao.dia }}', {% endfor %} ],
+                datasets: [{
+                    label: 'Preco de fechamento',
+                    data: [ {% for acao in object_list %} {{ acao.close }}, {% endfor %} ],
+                    fill:true,
+                    backgroundColor:gradient,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true
+                // scales: {
+                    //     y: {
+                        //         beginAtZero: true
+                        //     }
+                        // }
+                    }
+                });
+                
+    </script>
+{% endblock %}
